@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register | College Event Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>College Event Management System</h1>
+        <p class="subtitle">Event Registration</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="events.html">Events</a>
+        <a href="register.html">Register</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="container">
+        <h2>Register for an Event</h2>
+
+        <form class="Register-form">
+
+            <label>Student Name</label>
+            <input type="text" id="ip" placeholder="Enter your full name" required>
+
+            <label>Register Number</label>
+            <input type="text" placeholder="Enter register number" required>
+
+            <label>Department</label>
+            <input type="text" placeholder="Enter department" required>
+
+            <label>Email</label>
+            <input type="email" placeholder="Enter email address" required>
+
+            <label>Select Event</label>
+            <select id="event" required>
+                <option value="">-- Select Event --</option>
+                <option>Tech Fest</option>
+                <option>Culturals</option>
+                <option>Sports Meet</option>
+            </select>
+
+            <label>Year</label>
+            <select id="year" required>
+                <option value="">-- Select Year --</option>
+                <option>1st Year</option>
+                <option>2nd Year</option>
+                <option>3rd Year</option>
+                <option>4th Year</option>
+            </select>
+
+            <button type="button" onclick="registerEvent()">Register</button>
+        </form>
+        <div id="result" style="display:none; margin-top:20px;">
+            <h3>Registration Details</h3>
+            <p id="outName"></p>
+            <p id="outEvent"></p>
+            <p id="outYear"></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 College Event Management System</p>
+    </footer>
+    <script>
+        function registerEvent() {
+
+            let name = document.getElementById("ip").value;
+            let event = document.getElementById("event").value;
+            let year = document.getElementById("year").value;
+
+            if (name === "" || event === "" || year === "") {
+                alert("Please fill all the details");
+                return;
+            }
+
+            document.getElementById("outName").innerText =
+                "Student Name: " + name;
+
+            document.getElementById("outEvent").innerText =
+                "Selected Event: " + event;
+
+            document.getElementById("outYear").innerText =
+                "Year: " + year;
+
+            document.getElementById("result").style.display = "block";
+        }
+    </script>
+
+</body>
+</html>
