@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Selector</title>
+    </head>
+    <style>
+        body{
+            margin:0;
+            display: flex;
+            height:100px;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #cddea5;
+            align-items: centre;
+            justify-content: center;
+        }
+        .box {
+            width: 350px;
+            height:200px;
+            padding:25px;
+            background-color: rgb(30, 180, 160);
+            text-align: centre;
+            border-radius: 10px;
+            box-shadow: aqua;
+        }
+        .box h2 {
+            color: #311d1d;
+            margin-bottom: 15px;
+        }
+        .box p {
+            color:aliceblue;
+            margin-bottom:20px;
+            padding:20px;
+            text-decoration:wavy;
+        }
+        .box a{
+            text-decoration: underline;
+            background-color: rgb(141, 94, 118);
+            color:darkblue;
+            border-style:groove;
+            border-radius:15px;
+            box-shadow: ghostwhite;
+            box-decoration-break: slice;
+            display: inline-block;
+        }
+        .box a:hover {
+            background-color: #311d1d;
+
+        }
+    </style>
+    <body>
+        <div class="box">
+            <h2>College event management</h2>
+            <p>
+            Manage college events easily. View upcoming programs,
+            register online, and stay updated with announcements.
+            </p>
+            <a href="#" class="btn">Click</a>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Web page</title>
+    </head>
+    <style>
+        body {
+            height: auto;
+            display:block;
+            background-color: dimgray;
+            border: violet;
+            font-family: 'Times New Roman', Times, serif;
+            align-content:center;
+            justify-content:center;
+            margin: 0cm;
+            padding: 20px;
+        }
+        .box1 {
+            height: 200px;
+            width: 300px;
+            background-color: bisque;
+            border-radius: 3vh;
+            box-shadow: darksalmon;
+            padding-inline: initial;
+            text-align: center;
+            border-color: black;
+            border-style: double;
+        }
+        .box2 {
+            height: 200px;
+            width: 300px;
+            background-color: bisque;
+            border-radius: 1vh;
+            box-shadow: darksalmon;
+            padding-inline: initial;
+            text-align: center;
+            border-color: black;
+            border-style: double;
+        }
+        .box1 h2 {
+            color: brown;
+        }
+    </style>
+    <body>
+        <div class="box1">
+            <h2>FOOD</h2>
+            <p>
+                food is the main source for human being.
+            </p>
+            <a href="#" class="btn">For more detaila</a>
+        </div>
+        <div class="box2">
+            <h2>SHELTER</h2>
+            <p>
+                shelter is the basic need for human being.
+            </p>
+            <a href="#" class="btn">click here</a>
+        </div>
+        <p id="p"></p>
+        <script>
+            let p=document.getElementById("p");
+            p.innerText="hello Madhu";
+        </script>
+    </body>
+</html>
