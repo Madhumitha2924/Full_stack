@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — QuizMaster</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .dash-page {
+      padding: 90px 0 60px;
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+    }
+
+    /* Welcome Banner */
+    .welcome {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 36px 0;
+      margin-bottom: 48px;
+    }
+
+    .welcome-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .welcome-text h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-white);
+      margin-bottom: 6px;
+    }
+
+    .welcome-text p { color: var(--text-muted); font-size: 15px; }
+
+    .welcome-avatar {
+      width: 68px; height: 68px;
+      background: var(--grad-primary);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 30px;
+      flex-shrink: 0;
+      box-shadow: 0 0 32px rgba(99,102,241,0.4);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 18px;
+      margin-bottom: 44px;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 26px 22px;
+      text-align: center;
+      transition: all 0.3s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--grad-primary);
+    }
+
+    .stat-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-glow); }
+
+    .stat-card .s-icon { font-size: 28px; margin-bottom: 10px; display: block; }
+
+    .stat-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      background: var(--grad-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+
+    .stat-card p {
+      color: var(--text-muted);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-weight: 600;
+    }
+
+    /* Two column layout */
+    .dash-cols {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 22px;
+      margin-bottom: 44px;
+    }
+
+    /* Profile Card */
+    .profile-card {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 32px 24px;
+      text-align: center;
+    }
+
+    .profile-avatar {
+      width: 88px; height: 88px;
+      background: var(--grad-primary);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 34px;
+      margin: 0 auto 16px;
+      box-shadow: 0 0 32px rgba(99,102,241,0.4);
+    }
+
+    .profile-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 5px;
+    }
+
+    .profile-card .p-email {
+      color: var(--text-muted);
+      font-size: 13.5px;
+      margin-bottom: 12px;
+    }
+
+    .p-role {
+      display: inline-block;
+      background: rgba(99,102,241,0.18);
+      border: 1px solid rgba(99,102,241,0.3);
+      color: var(--indigo-light);
+      padding: 5px 16px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .divider-h { height:1px; background:rgba(255,255,255,0.07); margin:20px 0; }
+
+    .quick-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .quick-row:last-child { border-bottom: none; }
+    .quick-row .qr-label { color:var(--text-muted); font-size:13.5px; }
+    .quick-row .qr-val   { font-weight:700; color:var(--indigo-light); font-size:14px; }
+
+    /* Performance panel */
+    .perf-panel {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+
+    .perf-panel h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Section header */
+    .sec-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .sec-header h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-white);
+    }
+
+    .sec-header a { color:var(--indigo-light); font-size:13.5px; font-weight:600; }
+
+    /* Quiz list */
+    .quiz-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 18px;
+    }
+
+    .q-item {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-left: 3px solid var(--indigo);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: all 0.3s var(--ease);
+    }
+
+    .q-item:hover { transform:translateY(-4px); box-shadow:var(--shadow-glow); border-color:rgba(99,102,241,0.5); }
+
+    .q-item h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--text-white);
+    }
+
+    .q-item p { color:var(--text-muted); font-size:13px; display:flex; align-items:center; gap:5px; }
+
+    .btn-start {
+      margin-top: 8px;
+      background: var(--grad-primary);
+      color: white;
+      border: none;
+      padding: 11px;
+      border-radius: var(--radius-full);
+      font-family: 'Outfit', sans-serif;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s var(--ease);
+      box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+    }
+
+    .btn-start:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(99,102,241,0.5); }
+
+    /* Empty state */
+    .empty {
+      text-align: center;
+      padding: 56px 20px;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+    }
+
+    .empty .e-icon { font-size:52px; display:block; margin-bottom:14px; }
+    .empty h4 { font-size:17px; color:var(--text-soft); margin-bottom:8px; }
+
+    /* Loading row */
+    .loading-row { text-align:center; padding:32px; color:var(--text-muted); font-size:14px; }
+  </style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+</div>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">🎯 QuizMaster</a>
+  <div class="nav-links">
+    <span id="nav-username"></span>
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="#" onclick="logout()">Logout</a>
+  </div>
+</nav>
+
+<div class="dash-page">
+
+  <!-- Welcome Banner -->
+  <div class="welcome">
+    <div class="welcome-inner">
+      <div class="welcome-text animate-fade-up-1">
+        <h2 id="welcome-name">Welcome back! 👋</h2>
+        <p id="welcome-email">Loading your dashboard...</p>
+      </div>
+      <div class="welcome-avatar animate-fade-up-2">👤</div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card animate-fade-up-1">
+        <span class="s-icon">📝</span>
+        <h3 id="st-total">0</h3>
+        <p>Total Attempts</p>
+      </div>
+      <div class="stat-card animate-fade-up-2">
+        <span class="s-icon">✅</span>
+        <h3 id="st-passed">0</h3>
+        <p>Quizzes Passed</p>
+      </div>
+      <div class="stat-card animate-fade-up-3">
+        <span class="s-icon">🏆</span>
+        <h3 id="st-certs">0</h3>
+        <p>Certificates</p>
+      </div>
+      <div class="stat-card animate-fade-up-4">
+        <span class="s-icon">📊</span>
+        <h3 id="st-avg">0%</h3>
+        <p>Average Score</p>
+      </div>
+    </div>
+
+    <!-- Profile + Performance -->
+    <div class="dash-cols">
+
+      <!-- Profile Card -->
+      <div class="profile-card animate-fade-up-1">
+        <div class="profile-avatar">👤</div>
+        <h3 id="p-name">–</h3>
+        <p class="p-email" id="p-email">–</p>
+        <span class="p-role" id="p-role">STUDENT</span>
+        <div class="divider-h"></div>
+        <div class="quick-row"><span class="qr-label">Attempted</span><span class="qr-val" id="qr-total">0</span></div>
+        <div class="quick-row"><span class="qr-label">Passed</span>   <span class="qr-val" id="qr-passed">0</span></div>
+        <div class="quick-row"><span class="qr-label">Failed</span>   <span class="qr-val" id="qr-failed">0</span></div>
+        <div class="quick-row"><span class="qr-label">Best Score</span><span class="qr-val" id="qr-best">–</span></div>
+        <div class="quick-row"><span class="qr-label">Avg Score</span> <span class="qr-val" id="qr-avg">–</span></div>
+      </div>
+
+      <!-- Attempt History Table -->
+      <div class="perf-panel animate-fade-up-2">
+        <h4>📋 Quiz History</h4>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Quiz</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Certificate</th>
+              </tr>
+            </thead>
+            <tbody id="attempts-body">
+              <tr><td colspan="6" class="loading-row"><div class="spinner" style="margin:0 auto;"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Available Quizzes -->
+    <div class="sec-header animate-fade-up-1">
+      <h3>🎯 Available Quizzes</h3>
+      <a href="index.html">View All →</a>
+    </div>
+
+    <div class="quiz-list" id="quiz-list">
+      <div class="empty" style="grid-column:1/-1;">
+        <div class="spinner"></div>
+        <p style="margin-top:12px;">Loading quizzes...</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+  if (!getToken()) window.location.href = "login.html";
+
+  const user = getUser();
+
+  // Fill user info
+  if (user) {
+    document.getElementById("nav-username").textContent  = "👋 " + user.name;
+    document.getElementById("welcome-name").textContent  = "Welcome back, " + user.name + "! 👋";
+    document.getElementById("welcome-email").textContent = "📧 " + user.email;
+    document.getElementById("p-name").textContent        = user.name;
+    document.getElementById("p-email").textContent       = user.email;
+    document.getElementById("p-role").textContent        = user.role || "STUDENT";
+  }
+
+  window.onload = async () => {
+    await loadAttempts();
+    await loadQuizzes();
+  };
+
+  async function loadAttempts() {
+    const tbody = document.getElementById("attempts-body");
+    try {
+      const attempts = await getAttemptsByUser(user.id);
+
+      if (!attempts || !attempts.length) {
+        tbody.innerHTML = `<tr><td colspan="6">
+          <div class="empty">
+            <span class="e-icon">📭</span>
+            <h4>No attempts yet!</h4>
+            <p>Take your first quiz to see results here.</p>
+          </div></td></tr>`;
+        return;
+      }
+
+      const total   = attempts.length;
+      const passed  = attempts.filter(a => a.passed).length;
+      const failed  = total - passed;
+      const avgScore = Math.round(attempts.reduce((s,a) => s + a.score, 0) / total);
+      const best    = Math.max(...attempts.map(a => a.score));
+
+      // Update stats
+      document.getElementById("st-total").textContent  = total;
+      document.getElementById("st-passed").textContent = passed;
+      document.getElementById("st-certs").textContent  = passed;
+      document.getElementById("st-avg").textContent    = avgScore + "%";
+
+      // Update quick stats
+      document.getElementById("qr-total").textContent  = total;
+      document.getElementById("qr-passed").textContent = passed;
+      document.getElementById("qr-failed").textContent = failed;
+      document.getElementById("qr-best").textContent   = best + "%";
+      document.getElementById("qr-avg").textContent    = avgScore + "%";
+
+      // Render table
+      tbody.innerHTML = attempts.map((a, i) => `
+        <tr>
+          <td style="color:var(--text-muted); font-weight:700;">#${i+1}</td>
+          <td style="color:var(--text-white); font-weight:600;">Quiz #${a.quizId || "–"}</td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-bar-fill" style="width:${a.score}%"></div></div>
+              <span class="score-val">${a.score}%</span>
+            </div>
+          </td>
+          <td>
+            <span class="badge ${a.passed ? 'badge-passed' : 'badge-failed'}">
+              ${a.passed ? '✅ PASSED' : '❌ FAILED'}
+            </span>
+          </td>
+          <td style="color:var(--text-muted); font-size:13px;">${fmtDate(a.attemptDate)}</td>
+          <td>
+            ${a.passed
+              ? `<button class="btn-cert" onclick="dlCert(${a.id}, this)">🏆 Download</button>`
+              : `<span style="color:var(--text-muted);font-size:13px;">Not eligible</span>`}
+          </td>
+        </tr>
+      `).join("");
+
+    } catch {
+      tbody.innerHTML = `<tr><td colspan="6" class="loading-row">❌ Failed to load history. Please refresh.</td></tr>`;
+    }
+  }
+
+  async function loadQuizzes() {
+    const list = document.getElementById("quiz-list");
+    try {
+      const quizzes = await getAllQuizzes();
+      if (!quizzes.length) {
+        list.innerHTML = `<div class="empty" style="grid-column:1/-1;">
+          <span class="e-icon">😕</span><h4>No quizzes available</h4><p>Check back later!</p></div>`;
+        return;
+      }
+      list.innerHTML = quizzes.map(q => `
+        <div class="q-item">
+          <h4>📚 ${q.title}</h4>
+          <p>📌 ${q.topic}</p>
+          <p>⏱️ ${q.timeLimit} minutes</p>
+          <p>🎯 Pass: ${q.passingScore}%</p>
+          <button class="btn-start" onclick="location.href='quiz.html?quizId=${q.id}'">Start Quiz →</button>
+        </div>`).join("");
+    } catch {
+      list.innerHTML = `<div class="empty" style="grid-column:1/-1;"><p>❌ Failed to load quizzes.</p></div>`;
+    }
+  }
+
+  async function dlCert(attemptId, btn) {
+    btn.disabled = true;
+    btn.textContent = "⏳";
+    try {
+      await downloadCertificate(attemptId);
+      btn.textContent = "✅ Done!";
+      setTimeout(() => { btn.disabled = false; btn.textContent = "🏆 Download"; }, 3000);
+    } catch {
+      btn.disabled    = false;
+      btn.textContent = "🏆 Download";
+      alert("❌ Failed to download certificate!");
+    }
+  }
+
+  function fmtDate(str) {
+    if (!str) return "–";
+    return new Date(str).toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"numeric" });
+  }
+</script>
+</body>
+</html>

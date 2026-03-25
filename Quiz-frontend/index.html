@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuizMaster — Automated Quiz Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a href="index.html" class="logo">🎯 <span>QuizMaster</span></a>
+  <div class="nav-links">
+    <span id="user-greeting"></span>
+    <a href="index.html">Home</a>
+    <a href="dashboard.html" id="dash-link" style="display:none">Dashboard</a>
+    <a href="login.html" id="login-link">Login</a>
+    <a href="register.html" id="reg-link">Register</a>
+    <a href="#" id="logout-link" style="display:none" onclick="logout()">Logout</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">✨ AI-Powered Quiz Platform</div>
+  <h1>
+    Test Your Knowledge,<br>
+    <span class="gradient-text">Earn Certificates</span>
+  </h1>
+  <p>Challenge yourself with curated quizzes, get instant results, and download beautiful PDF certificates upon passing.</p>
+  <div class="hero-buttons">
+    <a href="register.html" class="btn btn-primary" style="padding:14px 36px;font-size:15px;">Get Started Free →</a>
+    <a href="login.html" class="btn btn-glass" style="padding:14px 36px;font-size:15px;">Login</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">50+</div><div class="label">Quizzes Available</div></div>
+    <div class="hero-stat"><div class="num">1K+</div><div class="label">Certificates Issued</div></div>
+    <div class="hero-stat"><div class="num">100%</div><div class="label">Free to Use</div></div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="section">
+  <div class="container">
+    <div class="section-label" style="margin:0 auto 16px;display:table;">FEATURES</div>
+    <h2 class="section-title">Everything You Need</h2>
+    <p class="section-subtitle">A complete quiz platform built for learners who want to prove their skills.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Timed Quizzes</h3>
+        <p>Challenge yourself with time-limited quizzes across multiple topics and difficulty levels.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <h3>PDF Certificates</h3>
+        <p>Pass any quiz and instantly download a professionally designed PDF certificate of completion.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Progress Dashboard</h3>
+        <p>Track all your quiz attempts, scores, and earned certificates in one beautiful dashboard.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔐</div>
+        <h3>Secure Auth</h3>
+        <p>JWT-based authentication keeps your account and data safe and secure at all times.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Instant Results</h3>
+        <p>Get your quiz results immediately after submission with detailed score breakdown.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Smart Scoring</h3>
+        <p>Intelligent scoring system with configurable passing thresholds for each quiz.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Available Quizzes -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-label" style="margin:0 auto 16px;display:table;">QUIZZES</div>
+    <h2 class="section-title">Available Quizzes</h2>
+    <p class="section-subtitle">Pick a quiz and start testing your knowledge right now!</p>
+    <div class="quiz-grid" id="quiz-grid">
+      <div class="loading-card" style="grid-column:1/-1">
+        <div class="spin">⏳</div>
+        <h3>Loading Quizzes...</h3>
+        <p>Please wait</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-label" style="margin:0 auto 16px;display:table;">HOW IT WORKS</div>
+    <h2 class="section-title">Get Certified in 4 Steps</h2>
+    <p class="section-subtitle">Simple, fast, and rewarding.</p>
+    <div class="steps-grid">
+      <div class="step-card"><div class="step-num">1</div><h4>Register</h4><p>Create your free account in seconds</p></div>
+      <div class="step-card"><div class="step-num">2</div><h4>Pick a Quiz</h4><p>Choose from our curated quiz library</p></div>
+      <div class="step-card"><div class="step-num">3</div><h4>Answer</h4><p>Complete all questions before time runs out</p></div>
+      <div class="step-card"><div class="step-num">4</div><h4>Download</h4><p>Get your PDF certificate instantly</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>🎯 QuizMaster — Automated Quiz Engine with PDF Certification Generation</p>
+  <p style="margin-top:8px;font-size:12px;opacity:0.6;">Built with Spring Boot + HTML + CSS + JavaScript</p>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+// Particles
+const pc = document.getElementById('particles');
+for(let i=0;i<18;i++){
+  const p=document.createElement('div');
+  p.className='particle';
+  const size=Math.random()*4+2;
+  p.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}vw;animation-duration:${Math.random()*12+8}s;animation-delay:${Math.random()*8}s;opacity:${Math.random()*0.3+0.1};background:${['#a78bfa','#f472b6','#34d399','#fbbf24'][Math.floor(Math.random()*4)]};`;
+  pc.appendChild(p);
+}
+
+// Nav state
+const user=getUser(),token=getToken();
+if(user&&token){
+  document.getElementById('user-greeting').textContent='👋 '+user.name;
+  document.getElementById('login-link').style.display='none';
+  document.getElementById('reg-link').style.display='none';
+  document.getElementById('logout-link').style.display='inline';
+  document.getElementById('dash-link').style.display='inline';
+}
+
+// Load quizzes
+async function loadQuizzes(){
+  const grid=document.getElementById('quiz-grid');
+  if(!token){
+    grid.innerHTML=`<div class="loading-card" style="grid-column:1/-1;padding:60px 40px;">
+      <span style="font-size:48px;display:block;margin-bottom:16px;">🔒</span>
+      <h3>Login to See Quizzes</h3>
+      <p style="margin-bottom:24px;color:var(--text-muted)">Please login to access all available quizzes.</p>
+      <a href="login.html" class="btn btn-primary" style="margin:0 auto;display:inline-flex;">Login Now →</a>
+    </div>`;
+    return;
+  }
+  try{
+    const quizzes=await getAllQuizzes();
+    if(!quizzes.length){
+      grid.innerHTML=`<div class="loading-card" style="grid-column:1/-1"><span style="font-size:48px;display:block;margin-bottom:16px;">😕</span><h3>No Quizzes Yet</h3><p>Check back later!</p></div>`;
+      return;
+    }
+    grid.innerHTML=quizzes.map((q,i)=>`
+      <div class="quiz-card" style="animation-delay:${i*0.08}s">
+        <div class="quiz-card-topic">📌 ${q.topic}</div>
+        <h3>${q.title}</h3>
+        <div class="quiz-meta">
+          <div class="quiz-meta-item"><span>⏱️</span><span>${q.timeLimit} minutes</span></div>
+          <div class="quiz-meta-item"><span>🎯</span><span>Pass: ${q.passingScore}%</span></div>
+        </div>
+        <a href="quiz.html?quizId=${q.id}" class="btn btn-primary">Start Quiz →</a>
+      </div>`).join('');
+  }catch(e){
+    grid.innerHTML=`<div class="loading-card" style="grid-column:1/-1"><span style="font-size:48px;display:block;margin-bottom:16px;">❌</span><h3>Failed to Load</h3><p>Please refresh the page.</p></div>`;
+  }
+}
+loadQuizzes();
+</script>
+</body>
+</html>

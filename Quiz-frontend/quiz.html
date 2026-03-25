@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz — QuizMaster</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .quiz-page {
+      padding: 100px 20px 60px;
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+    }
+    .quiz-wrap { max-width: 760px; margin: 0 auto; }
+
+    .q-header {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      padding: 22px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .q-header h2 { font-family:'Syne',sans-serif; font-size:19px; font-weight:800; color:var(--text-white); }
+    .q-header p  { font-size:13px; color:var(--text-muted); margin-top:3px; }
+
+    .timer {
+      background: rgba(99,102,241,0.2);
+      border: 1px solid rgba(99,102,241,0.4);
+      color: var(--indigo-light);
+      padding: 10px 22px;
+      border-radius: var(--radius-full);
+      font-family: 'Syne', sans-serif;
+      font-size: 20px; font-weight: 800;
+      letter-spacing: 2px;
+      min-width: 96px; text-align: center;
+    }
+    .timer.warning { background:rgba(245,158,11,0.2); border-color:rgba(245,158,11,0.4); color:var(--amber); }
+    .timer.danger  { background:rgba(239,68,68,0.2);  border-color:rgba(239,68,68,0.4);  color:#fca5a5; animation:pulse 0.6s infinite; }
+
+    .progress-track { height:4px; background:rgba(255,255,255,0.06); }
+    .progress-fill  { height:4px; background:var(--grad-primary); transition:width 0.4s var(--ease); }
+
+    .q-box {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid var(--glass-border);
+      border-right: 1px solid var(--glass-border);
+      padding: 40px 40px 32px;
+    }
+
+    .q-num {
+      font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+      background:var(--grad-primary); -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:12px;
+    }
+    .q-text { font-size:19px; font-weight:600; color:var(--text-white); line-height:1.55; margin-bottom:28px; }
+
+    .option {
+      display:flex; align-items:center;
+      padding:15px 20px;
+      background:rgba(255,255,255,0.04);
+      border:1.5px solid rgba(255,255,255,0.1);
+      border-radius:var(--radius-md);
+      margin-bottom:11px;
+      cursor:pointer;
+      transition:all 0.2s var(--ease);
+      font-size:15px; color:var(--text-soft);
+    }
+    .option:hover { background:rgba(99,102,241,0.12); border-color:rgba(99,102,241,0.4); transform:translateX(5px); color:var(--text-white); }
+    .option.selected { background:rgba(99,102,241,0.18); border-color:rgba(99,102,241,0.6); color:var(--text-white); box-shadow:0 0 20px rgba(99,102,241,0.2); }
+
+    .opt-label {
+      width:32px; height:32px;
+      background:rgba(99,102,241,0.2);
+      border:1px solid rgba(99,102,241,0.35);
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:13px; font-weight:800; color:var(--indigo-light);
+      margin-right:15px; flex-shrink:0;
+    }
+    .option.selected .opt-label { background:var(--indigo); border-color:var(--indigo); color:white; }
+
+    .q-footer {
+      background:rgba(255,255,255,0.05);
+      backdrop-filter:blur(20px);
+      border:1px solid var(--glass-border);
+      border-radius:0 0 var(--radius-lg) var(--radius-lg);
+      padding:20px 32px;
+      display:flex; justify-content:space-between; align-items:center;
+      gap:16px; flex-wrap:wrap;
+    }
+
+    .dots { display:flex; gap:7px; flex-wrap:wrap; max-width:400px; }
+    .dot {
+      width:32px; height:32px; border-radius:50%;
+      background:rgba(255,255,255,0.06);
+      border:1.5px solid rgba(255,255,255,0.12);
+      display:flex; align-items:center; justify-content:center;
+      font-size:12px; font-weight:700; color:var(--text-muted);
+      cursor:pointer; transition:all 0.2s var(--ease);
+    }
+    .dot.answered { background:rgba(99,102,241,0.3); border-color:var(--indigo); color:var(--indigo-light); }
+    .dot.current  { background:var(--indigo); border-color:var(--indigo); color:white; transform:scale(1.2); }
+
+    .nav-btns { display:flex; gap:10px; }
+    .btn-nav {
+      padding:10px 22px; border-radius:var(--radius-full); border:none;
+      font-family:'Outfit',sans-serif; font-weight:700; font-size:13.5px;
+      cursor:pointer; transition:all 0.2s var(--ease);
+    }
+    .btn-prev { background:rgba(255,255,255,0.08); color:var(--text-soft); border:1px solid var(--glass-border); }
+    .btn-prev:hover { background:rgba(255,255,255,0.14); color:white; }
+    .btn-next { background:var(--grad-primary); color:white; box-shadow:0 4px 16px rgba(99,102,241,0.35); }
+    .btn-next:hover { transform:translateY(-2px); }
+    .btn-submit { background:linear-gradient(135deg,#059669,#10b981); color:white; }
+    .btn-submit:hover { transform:translateY(-2px); }
+  </style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">🎯 QuizMaster</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="#" onclick="logout()">Logout</a>
+  </div>
+</nav>
+
+<div class="quiz-page">
+  <div class="quiz-wrap">
+
+    <div id="loading-screen" class="loading-screen">
+      <div class="spinner"></div>
+      <h3 style="font-family:'Syne',sans-serif; margin-bottom:8px;">Loading Quiz...</h3>
+      <p style="color:var(--text-muted);">Preparing your questions</p>
+    </div>
+
+    <div id="quiz-content" style="display:none;">
+      <div class="q-header">
+        <div>
+          <h2 id="quiz-title">Quiz</h2>
+          <p id="quiz-topic">Topic</p>
+        </div>
+        <div class="timer" id="timer">00:00</div>
+      </div>
+
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+
+      <div class="q-box">
+        <div class="q-num" id="q-num">Question 1 of 1</div>
+        <div class="q-text" id="q-text">Loading...</div>
+        <div id="options"></div>
+      </div>
+
+      <div class="q-footer">
+        <div class="dots" id="dots"></div>
+        <div class="nav-btns">
+          <button class="btn-nav btn-prev" id="btn-prev" onclick="prevQ()">← Prev</button>
+          <button class="btn-nav btn-next" id="btn-next" onclick="nextQ()">Next →</button>
+          <button class="btn-nav btn-submit" id="btn-submit" onclick="confirmSubmit()" style="display:none;">Submit ✓</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div style="font-size:48px; margin-bottom:16px;">📝</div>
+    <h3>Submit Quiz?</h3>
+    <p id="modal-msg">Are you sure you want to submit?</p>
+    <div class="modal-btns">
+      <button class="btn btn-glass" onclick="closeModal()">Review Again</button>
+      <button class="btn btn-primary" onclick="doSubmit()">Yes, Submit!</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+  if (!getToken()) window.location.href = "login.html";
+
+  const params = new URLSearchParams(location.search);
+  const quizId = params.get("quizId");
+  if (!quizId) window.location.href = "index.html";
+
+  let questions=[], answers={}, current=0, timeLeft=0, timer, quizData;
+
+  window.onload = async () => {
+    try {
+      quizData  = await getQuizById(quizId);
+      questions = await getQuestions(quizId);
+
+      if (!questions.length) {
+        document.getElementById("loading-screen").innerHTML =
+          `<div style="font-size:48px">😕</div><h3 style="font-family:'Syne',sans-serif">No Questions</h3>
+           <p style="color:var(--text-muted);margin:10px 0 20px">This quiz has no questions yet.</p>
+           <a href="index.html" class="btn btn-primary">Go Home</a>`;
+        return;
+      }
+
+      document.getElementById("quiz-title").textContent = quizData.title;
+      document.getElementById("quiz-topic").textContent = "📌 " + quizData.topic;
+      timeLeft = quizData.timeLimit * 60;
+      startTimer();
+      render();
+      document.getElementById("loading-screen").style.display = "none";
+      document.getElementById("quiz-content").style.display   = "block";
+    } catch(e) {
+      document.getElementById("loading-screen").innerHTML =
+        `<div style="font-size:48px">❌</div><h3 style="font-family:'Syne',sans-serif">Failed to Load</h3>
+         <a href="index.html" class="btn btn-primary" style="margin-top:20px">Go Home</a>`;
+    }
+  };
+
+  function render() {
+    const q=questions[current], total=questions.length;
+    document.getElementById("q-num").textContent   = `Question ${current+1} of ${total}`;
+    document.getElementById("q-text").textContent  = q.questionText;
+    document.getElementById("progress-fill").style.width = `${((current+1)/total)*100}%`;
+
+    const opts=[["A",q.optionA],["B",q.optionB],["C",q.optionC],["D",q.optionD]];
+    document.getElementById("options").innerHTML = opts.map(([l,t]) =>
+      `<div class="option ${answers[q.id]===l?'selected':''}" onclick="pick('${l}')">
+         <div class="opt-label">${l}</div>${t}
+       </div>`).join("");
+
+    document.getElementById("btn-prev").style.display   = current===0        ? "none":"inline-flex";
+    document.getElementById("btn-next").style.display   = current===total-1  ? "none":"inline-flex";
+    document.getElementById("btn-submit").style.display = current===total-1  ? "inline-flex":"none";
+    renderDots();
+  }
+
+  function pick(l)  { answers[questions[current].id]=l; render(); }
+  function nextQ()  { if(current<questions.length-1){ current++; render(); } }
+  function prevQ()  { if(current>0){ current--; render(); } }
+  function goTo(i)  { current=i; render(); }
+
+  function renderDots() {
+    document.getElementById("dots").innerHTML = questions.map((q,i) =>
+      `<div class="dot ${i===current?'current':''} ${answers[q.id]?'answered':''}" onclick="goTo(${i})">${i+1}</div>`
+    ).join("");
+  }
+
+  function startTimer() {
+    updateTimer();
+    timer = setInterval(()=>{ timeLeft--; updateTimer(); if(timeLeft<=0){ clearInterval(timer); doSubmit(); } },1000);
+  }
+
+  function updateTimer() {
+    const m=String(Math.floor(timeLeft/60)).padStart(2,"0");
+    const s=String(timeLeft%60).padStart(2,"0");
+    const el=document.getElementById("timer");
+    el.textContent = `${m}:${s}`;
+    el.className   = "timer"+(timeLeft<=60?" danger":timeLeft<=300?" warning":"");
+  }
+
+  function confirmSubmit() {
+    const answered=Object.keys(answers).length;
+    const unanswered=questions.length-answered;
+    document.getElementById("modal-msg").textContent =
+      `You answered ${answered} of ${questions.length} questions.${unanswered?" ⚠️ "+unanswered+" unanswered!":""}`;
+    document.getElementById("modal").classList.add("show");
+  }
+
+  function closeModal() { document.getElementById("modal").classList.remove("show"); }
+
+  async function doSubmit() {
+    // DEBUG: log what we are sending
+    console.log("answers object:", JSON.stringify(answers));
+    console.log("quizId:", quizId, "userId:", getUser()?.id);
+    clearInterval(timer); closeModal();
+    const user=getUser();
+    try {
+      const result = await submitQuiz(parseInt(quizId), user.id, answers);
+      sessionStorage.setItem("quizResult", JSON.stringify({
+        ...result, quizTitle:quizData.title, quizId, passingScore:quizData.passingScore
+      }));
+      window.location.href = "result.html";
+    } catch(err) { console.error('Submit failed:', err); alert('❌ Submit failed: ' + (err.message || 'Check console F12 for details')); }
+  }
+</script>
+</body>
+</html>
